@@ -113,5 +113,5 @@ if __name__ == "__main__":
     print("Sort of G1 w/ DFS:", topo_sort(G1))
     print("Sort of G1 w/ Kahn:", khan(G1))
 
-    print("Sort of G2 w/ DFS:", topo_sort_(G2))
+    print("Sort of G2 w/ DFS:", topo_sort(G2))
     print("Sort of G2 w/ Kahn:", khan(G2))
