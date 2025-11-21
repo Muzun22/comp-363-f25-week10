@@ -1,0 +1,117 @@
+
+def khan(graph: list[list[int]]) -> list[int]:
+
+    
+    if (
+         graph is None
+        or not isinstance(graph, list)
+        or len(graph) == 0
+        or not all(isinstance(row, list) for row in graph)
+        or not all(len(row) == len(graph) for row in graph)
+    ):
+        raise ValueError("Input must be a non-empty square adjacency matrix.")
+
+    N = len(graph)
+    NO_EDGE = graph[0][0]
+
+    in_degrees = [0] * N
+    for u in range(N):
+        for v in range(N):
+            if graph[u][v] != NO_EDGE:
+                in_degrees[v] += 1
+
+    # Initial sources
+    sources = []
+    for i in range(N):
+        if in_degrees[i] == 0:
+            sources.append(i)
+
+    topological_order = []
+
+    # Remove sources
+    while len(sources) > 0:
+        vertex = sources.pop(0)
+        topological_order.append(vertex)
+
+        for neighbor in range(N):
+            if graph[vertex][neighbor] != NO_EDGE:
+                in_degrees[neighbor] -= 1
+                if in_degrees[neighbor] == 0:
+                    sources.append(neighbor)
+
+    return topological_order
+
+
+def DFS(G, v, marked):
+    marked.append(v)
+    for w in range(len(G)):
+        if G[v][w] != G[0][0] and w not in marked:
+            DFS(G, w, marked)
+    return marked
+
+
+def DFS_helper(G, v):
+
+    return DFS(G, v, [])
+
+
+
+
+def topo_sort(G):
+
+    n = len(G)
+    NO_EDGE = G[0][0]
+
+    marked = [False] * n
+    postorder = []  # stores finish order
+
+    def dfs(v):
+        marked[v] = True
+
+        for w in range(n):
+            if G[v][w] != NO_EDGE and not marked[w]:
+                dfs(w)
+
+
+        postorder.append(v)
+
+    # Launch DFS from eaach unmarked vertex
+    for v in range(n):
+        if not marked[v]:
+            dfs(v)
+
+    # Reverse postorder 
+    topo = []
+    for i in range(len(postorder) - 1, -1, -1):
+        topo.append(postorder[i])
+
+    return topo
+
+
+
+G1 = [
+    [0, 1, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1],
+    [1, 1, 1, 0, 1, 1],
+    [0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0],
+]
+
+G2 = [
+    [0, 0, 1, 0, 1, 1],
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 1, 1],
+    [0, 1, 2, 0, 0, 1],
+    [0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0],
+]
+
+
+
+if __name__ == "__main__":
+    print("Sort of G1 w/ DFS:", topo_sort(G1))
+    print("Sort of G1 w/ Kahn:", khan(G1))
+
+    print("Sort of G2 w/ DFS:", topo_sort_(G2))
+    print("Sort of G2 w/ Kahn:", khan(G2))
